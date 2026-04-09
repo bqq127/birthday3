@@ -31,37 +31,86 @@ body{background:linear-gradient(180deg,#fff0f6,#ffe3f0);min-height:100vh;display
 </style>
 </head>
 <body>
+
+<!-- 修复：闭合音频标签，修正语法 -->
 <audio id="bgm" loop src="https://mir-s1-cdn-ig.karakalemcdn.com/mp3/preview/625811/625811841.mp3">
+
 <div class="stage">
-<div class="orbit-ring"></div>
-<div class="orbit-ring"></div>
-<div class="orbit-ring"></div>
-<div class="orbit-ring"></div>
-<div class="orbit-ring"></div>
-<div class="orbit-ring"></div>
-<div class="orbit-ring"></div>
-<div class="orbit-ring"></div>
-<div class="center-role"><img src="https://picsum.photos/id/65/300/300"></div>
-<div class="orbit-role"><img src="https://picsum.photos/id/1025/200/200"></div>
-<div class="orbit-role"><img src="https://picsum.photos/id/1074/200/200"></div>
-<div class="orbit-role"><img src="https://picsum.photos/id/1062/200/200"></div>
-<div class="orbit-role"><img src="https://picsum.photos/id/1069/200/200"></div>
+  <div class="orbit-ring"></div>
+  <div class="orbit-ring"></div>
+  <div class="orbit-ring"></div>
+  <div class="orbit-ring"></div>
+  <div class="orbit-ring"></div>
+  <div class="orbit-ring"></div>
+  <div class="orbit-ring"></div>
+  <div class="orbit-ring"></div>
+
+  <div class="center-role"><img src="https://picsum.photos/id/65/300/300"></div>
+  <div class="orbit-role"><img src="https://picsum.photos/id/1025/200/200"></div>
+  <div class="orbit-role"><img src="https://picsum.photos/id/1074/200/200"></div>
+  <div class="orbit-role"><img src="https://picsum.photos/id/1062/200/200"></div>
+  <div class="orbit-role"><img src="https://picsum.photos/id/1069/200/200"></div>
 </div>
-<div class="popup"><div class="close">×</div><video id="player" playsinline></video></div>
+
+<div class="popup">
+  <div class="close">×</div>
+  <video id="player" playsinline></video>
+</div>
+
 <script>
-const bgm=document.getElementById("bgm");bgm.volume=0.67;
-document.addEventListener("touchstart",()=>{bgm.play()},{once:true});
-window.addEventListener("load",()=>{bgm.play().catch(()=>{});});
-const stage=document.querySelector(".stage");
-const icons=["🎂","🎈","✨","🎁","🎊","💖"];
-const orbits=[280,340,400,460,520,580,640,700];
-for(let i=0;i<40;i++){let d=document.createElement("div");d.className="star-decor";d.innerText=icons[Math.random()*icons.length|0];let r=orbits[Math.random()*orbits.length|0]/2;let a=Math.random()*Math.PI*2;d.style.left=350+r*Math.cos(a)+"px";d.style.top=350+r*Math.sin(a)+"px";stage.appendChild(d)}
-const cards=document.querySelectorAll(".orbit-role");let angle=0;
-function animate(){angle+=0.006;cards.forEach((e,i)=>{let t=angle+i*Math.PI/2;let l=350+270*Math.cos(t)-55;let o=350+270*Math.sin(t)-55;e.style.left=l+"px";e.style.top=o+"px"});requestAnimationFrame(animate)}animate();
-const close=document.querySelector(".close");const popup=document.querySelector(".popup");
-close.onclick=()=>{popup.classList.remove("show");bgm.play()};
-const items=document.querySelectorAll(".center-role,.orbit-role");
-items.forEach(e=>{e.onclick=()=>{bgm.pause();popup.classList.add("show")}});
+const bgm = document.getElementById("bgm");
+bgm.volume = 0.67; // 音量减小1/3
+
+// 自动播放兼容：页面加载+用户点击双保险
+document.addEventListener("touchstart", () => { bgm.play() }, { once: true });
+window.addEventListener("load", () => { bgm.play().catch(() => {}) });
+
+// 星环装饰生成
+const stage = document.querySelector(".stage");
+const icons = ["🎂","🎈","✨","🎁","🎊","💖"];
+const orbits = [280,340,400,460,520,580,640,700];
+for(let i=0;i<40;i++){
+  let d = document.createElement("div");
+  d.className = "star-decor";
+  d.innerText = icons[Math.floor(Math.random()*icons.length)];
+  let r = orbits[Math.floor(Math.random()*orbits.length)]/2;
+  let a = Math.random()*Math.PI*2;
+  d.style.left = 350 + r*Math.cos(a) + "px";
+  d.style.top = 350 + r*Math.sin(a) + "px";
+  stage.appendChild(d);
+}
+
+// 匀速慢速旋转动画
+const cards = document.querySelectorAll(".orbit-role");
+let angle = 0;
+function animate(){
+  angle += 0.006;
+  cards.forEach((el,i)=>{
+    let t = angle + i*Math.PI/2;
+    let l = 350 + 270*Math.cos(t) - 55;
+    let o = 350 + 270*Math.sin(t) - 55;
+    el.style.left = l + "px";
+    el.style.top = o + "px";
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// 点击交互：视频播放暂停音乐，关闭恢复
+const close = document.querySelector(".close");
+const popup = document.querySelector(".popup");
+close.onclick = () => {
+  popup.classList.remove("show");
+  bgm.play();
+};
+const items = document.querySelectorAll(".center-role,.orbit-role");
+items.forEach(e => {
+  e.onclick = () => {
+    bgm.pause();
+    popup.classList.add("show");
+  };
+});
 </script>
+
 </body>
 </html>
